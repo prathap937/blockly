@@ -357,7 +357,7 @@ Blockly.WorkspaceSvg.prototype.getParentSvg = function() {
  * @param {number} y Vertical translation.
  */
 Blockly.WorkspaceSvg.prototype.translate = function(x, y) {
-  if (isNaN(x) || isNaN(y)) {
+  if (!isFinite(x) || !isFinite(y)) {
     x = 0;
     y = 0;
   }
