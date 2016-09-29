@@ -357,6 +357,10 @@ Blockly.WorkspaceSvg.prototype.getParentSvg = function() {
  * @param {number} y Vertical translation.
  */
 Blockly.WorkspaceSvg.prototype.translate = function(x, y) {
+  if (isNaN(x) || isNaN(y)) {
+    x = 0;
+    y = 0;
+  }
   var translation = 'translate(' + x + ',' + y + ') ' +
       'scale(' + this.scale + ')';
   this.svgBlockCanvas_.setAttribute('transform', translation);

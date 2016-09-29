@@ -1,11 +1,4 @@
 {
-	"@metadata": {
-		"authors": [
-			"Espertus",
-			"Liuxinyu970226",
-			"Shirayuki"
-		]
-	},
 	"VARIABLES_DEFAULT_NAME": "default name - A simple, general default name for a variable, preferably short. For more context, see [[Translating:Blockly#infrequent_message_types]].\n{{Identical|Item}}",
 	"TODAY": "button text - Botton that sets a calendar to today's date.\n{{Identical|Today}}",
 	"DUPLICATE_BLOCK": "context menu - Make a copy of the selected block (and any blocks it contains).\n{{Identical|Duplicate}}",
@@ -90,7 +83,7 @@
 	"LOGIC_COMPARE_TOOLTIP_GTE": "tooltip - Describes the greater than or equals (≥) block.",
 	"LOGIC_OPERATION_HELPURL": "url - Information about the Boolean conjunction ('and') and disjunction ('or') operators.  Consider using the translation of [https://en.wikipedia.org/wiki/Boolean_logic https://en.wikipedia.org/wiki/Boolean_logic], if it exists in your language.",
 	"LOGIC_OPERATION_TOOLTIP_AND": "tooltip - See [https://en.wikipedia.org/wiki/Logical_conjunction https://en.wikipedia.org/wiki/Logical_conjunction].",
-	"LOGIC_OPERATION_AND": "block text - See [https://en.wikipedia.org/wiki/Logical_conjunction https://en.wikipedia.org/wiki/Logical_conjunction].\n{{Identical|And}}",
+	"LOGIC_OPERATION_AND": "block text - See [https://en.wikipedia.org/wiki/Logical_conjunction https://en.wikipedia.org/wiki/Logical_conjunction].",
 	"LOGIC_OPERATION_TOOLTIP_OR": "block text - See [https://en.wikipedia.org/wiki/Disjunction https://en.wikipedia.org/wiki/Disjunction].",
 	"LOGIC_OPERATION_OR": "block text - See [https://en.wikipedia.org/wiki/Disjunction https://en.wikipedia.org/wiki/Disjunction].",
 	"LOGIC_NEGATE_HELPURL": "url - Information about logical negation.  The translation of [https://en.wikipedia.org/wiki/Logical_negation https://en.wikipedia.org/wiki/Logical_negation] is recommended if it exists in the target language.",
