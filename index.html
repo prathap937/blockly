@@ -6,6 +6,7 @@
 <script src="javascript_compressed.js"></script>
 <script src="msg/js/en.js"></script>
 <script src="blocks/tpblock.js"></script>
+<script src="blocks/tpblock_extractor.js"></script>
 <script src="generators/javascript/tpblock.js"></script>
 <script src="../closure-library/closure/goog/base.js"></script>
 
@@ -30,7 +31,7 @@
     window.addEventListener('resize', onresize, true);
     Blockly.svgResize(workspace); 
 
-    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="195" y="107"><value name="line"><block type="field_extractor" id="-UBE=0AF-5wVL6~}%=aX"><field name="delim"></field><field name="get"></field><field name="operation">string</field><field name="VAR">i</field></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><field name="operation">hdfs</field><field name="path"></field><field name="headers">TRUE</field><value name="list_to_store"></value></block></next></block></next></block></xml>';
+    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="195" y="107"><value name="line"><block type="delimiter" id="Ac+pjF7~c!4aIPbI+wZ)"><field name="delim">3</field><value name="next_marker"><block type="field_extractor" id="O=YTnW5cO}VG9vq~DzF-"><field name="NAME">1</field><field name="operation">string</field><field name="VAR">string2</field></block></value></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><mutation items="2"></mutation><field name="operation">hdfs</field><field name="headers">TRUE</field></block></next></block></next></block></xml>';
 
                  var xmlDom = Blockly.Xml.textToDom(xmlInit);
                 Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xmlDom);

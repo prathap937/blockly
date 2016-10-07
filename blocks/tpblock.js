@@ -9,6 +9,14 @@ Blockly.Tp._connectMeToTransform = function(block) {
     block.previousConnection.connect(transformInputLists[transformInputLists.length - 1].connection);
 }
 
+Blockly.Tp.Counter = {
+    count: 0,
+    getNewVar: function(type) {
+        var prefix = type ? type : 'var_';
+        this.count++;
+        return prefix + this.count;
+    }
+}
 var blockObj = function(obj) {
     obj.renameVar = function(oldName, newName) {
         if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
@@ -21,36 +29,6 @@ var blockObj = function(obj) {
 
 };
 
-
-Blockly.Blocks["extractor"] = {
-    init: function() {
-        this.appendValueInput("line")
-            .setCheck(['field_extractor', 'Array'])
-            .appendField("Extract from line");
-        this.appendValueInput("file")
-            .setCheck(["field_extractor","Array"])
-            .appendField("Extract from file name");
-        this.setInputsInline(false);
-        this.setNextStatement("transform");
-        this.setColour(20);
-        this.setTooltip("");
-        this.setHelpUrl("http://www.example.com/");
-        Blockly.Tp.extractor_ = this;
-    },
-    validate: function() {
-        var lines = this.getInputTargetBlock('line');
-        var files = this.getInputTargetBlock('file');
-        if (!lines && !files) {
-            this.setWarningText('Append atleast one extraction or transformation');
-            return false;
-        }
-        this.setWarningText(null);
-        return true;
-    },
-    onchange: function(e) {
-        this.validate();
-    }
-};
 
 Blockly.Blocks["field_extractor"] = {
     init: function() {
@@ -180,10 +158,11 @@ Blockly.Blocks["store"] = {
             .appendField(new Blockly.FieldDropdown([
                 ["Hdfs", "Hdfs"],
                 ["Local", "Local"]
-            ]), "operation")
-            .appendField("location")
+            ]), "operation");
+            // .appendDummyInput(null)
+            // .appendField("location")
         //     .appendField(new Blockly.FieldTextInput(""), "path");
-        // this.appendDummyInput()
+        this.appendDummyInput()
             .appendField("Use variable names as header")
             .appendField(new Blockly.FieldCheckbox("TRUE"), "headers");
         this.setInputsInline(false);
@@ -264,9 +243,9 @@ Blockly.Blocks["store"] = {
         } else {
             for (var i = 0; i < this.itemCount_; i++) {
                 var input = this.appendValueInput('ADD' + i);
-                if (i == 0) {
-                    input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
-                }
+                // if (i == 0) {
+                //     input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
+                // }
             }
         }
     },
@@ -799,6 +778,13 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
 
     function addWorkspaceOptions() {
         var obj = [{
+            enabled: true,
+            text: "Delimiter",
+            // callback: CreateFieldExtractor
+            callback: function() {
+                renderBlock('delimiter');
+            }
+        }, {
             enabled: true,
             text: "Field Extractor",
             // callback: CreateFieldExtractor
