@@ -31,8 +31,9 @@
     window.addEventListener('resize', onresize, true);
     Blockly.svgResize(workspace); 
 
-    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="195" y="107"><value name="line"><block type="delimiter" id="Ac+pjF7~c!4aIPbI+wZ)"><field name="delim">3</field><value name="next_marker"><block type="field_extractor" id="O=YTnW5cO}VG9vq~DzF-"><field name="NAME">1</field><field name="operation">string</field><field name="VAR">string2</field></block></value></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><mutation items="2"></mutation><field name="operation">hdfs</field><field name="headers">TRUE</field></block></next></block></next></block></xml>';
+    // var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="192" y="192"><value name="line"><block type="delimiter" id=")_!qb9F/ZEH*[C1F8[a#"><field name="delim">|</field><value name="next_marker"><block type="field_extractor" id=":r/k,#9Opi7y^vqT_6.l"><field name="NAME">0</field><field name="operation">string</field><field name="VAR">string0</field></block></value></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><mutation items="2"></mutation><field name="operation">hdfs</field><field name="headers">TRUE</field></block></next></block></next></block></xml>';
 
+    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="247" y="290"><value name="line"><block type="delimiter" id="qMnz}t3a9,,XE4@/jLCb"><mutation items="3"></mutation><field name="delim"></field><value name="next_marker_1"><block type="field_extractor" id="@,~OvNIl-dvxywoxZX8`"><field name="NAME">1</field><field name="operation">string</field><field name="VAR">string2</field></block></value></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><mutation items="2"></mutation><field name="operation">hdfs</field><field name="headers">TRUE</field></block></next></block></next></block></xml>';
                  var xmlDom = Blockly.Xml.textToDom(xmlInit);
                 Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xmlDom);
 
@@ -68,5 +69,6 @@
       console.log(output)
     });
   </script>
+  <script src="blocks/bbm.js"></script>
 </body>
 </html>

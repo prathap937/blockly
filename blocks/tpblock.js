@@ -29,112 +29,6 @@ var blockObj = function(obj) {
 
 };
 
-
-Blockly.Blocks["field_extractor"] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("token delimited by")
-            .appendField(new Blockly.FieldTextInput(""), "delim")
-            .appendField("extract ")
-            // .appendField(new Blockly.FieldNumber(''), "get")
-            // .appendField(new Blockly.FieldVariable(''), "get")
-            .appendField(new Blockly.FieldTextInput(''), "get")
-            .appendField("nd column of type")
-            .appendField(new Blockly.FieldDropdown(JSON.parse(Blockly.Tp.dataType)), "operation")
-            .appendField(" & is named as")
-            .appendField(new Blockly.FieldVariable(""), "VAR");
-        this.appendValueInput("next_marker")
-            .setCheck(["field_extractor","Array"]);
-        this.setInputsInline(false);
-        this.setOutput(true, "field_extractor");
-        this.setColour(20);
-        this.setTooltip("");
-        this.setHelpUrl("http://www.example.com/");
-        blockObj(this);
-    },
-    onchange: function(e) {
-
-        if (!this.workspace || e.blockId != this.id) {
-            return;
-        }
-
-        if (e.type == 'change') {
-            var varType = this.getFieldValue('operation');
-            var variable = this.getFieldValue('VAR');
-            if (e.name == 'VAR') {
-                var mainWorkspace = Blockly.getMainWorkspace();
-                if (variable.charAt(0) == '_') {
-                    // Appends new block to main workspace
-                    var newBlock = mainWorkspace.newBlock('binary');
-                    newBlock.initSvg();
-                    newBlock.render();
-                    var inputLists = Blockly.Tp.transform_.inputList;
-                    // Sets default value
-                    newBlock.setFieldValue(variable, 'm1');
-                    // Connects to Blockly.Tp.transform_
-                    // @Read more: Blockly.Connection.prototype.connect
-                    var c1 = new Blockly.Connection(newBlock, Blockly.PREVIOUS_STATEMENT);
-                    newBlock.previousConnection.connect(inputLists[inputLists.length - 1].connection);
-                } else {
-                    var newVar = mainWorkspace.newBlock('output_field');
-                    newVar.initSvg();
-                    newVar.render();
-                    newVar.setFieldValue(variable, 'NAME');
-                    Blockly.Tp.store_.appendNewVar(newVar.outputConnection);
-                }
-                if (Blockly.Tp.variableDateTypeMap[variable]) {
-                    this.setWarningText('Use unique variable names');
-                    return false;
-                }
-                Blockly.Tp.variableDateTypeMap[e.newValue] = varType;
-                if (e.oldValue) {
-                    delete Blockly.Tp.variableDateTypeMap[e.oldValue];
-                }
-            } else if (e.name == 'operation') {
-                Blockly.Tp.variableDateTypeMap[variable] = e.newValue;
-            }
-            if (e.newValue == 'date') {
-                var _newDateBlock = renderBlock('tp_date_format');
-                _newDateBlock.setFieldValue(this.getFieldValue('VAR'), 'prefix');
-            }
-        }
-
-        // Blockly.Tp.variableMap[this.getFieldValue("VAR")] = this.getFieldValue("operation");
-        this.getFieldValue('VAR');
-        this.getFieldValue('operation');
-        this.validate();
-    },
-
-    validate: function() {
-        var _isError = [];
-        var number_get = this.getFieldValue('get');
-        var text_delim = this.getFieldValue('delim');
-        var variable_marker = this.getFieldValue('VAR');
-        if (number_get == '') {
-            _isError.push('Give a token ordinal');
-        } else {
-            number_get = +number_get;
-            if (!Number.isInteger(number_get)) {
-                _isError.push('Token ordinal should be a number');
-            }
-        }
-        if (text_delim == '') {
-            _isError.push('Text delimiter missing');
-        }
-        if (variable_marker.charAt(0) == 'f') {
-            _isError.push('Variable names cannot be "f"');
-        }
-        if (_isError.length) {
-            this.setWarningText(_isError.join('\n'));
-            return false;
-        } else {
-            this.setWarningText(null);
-            return true;
-        }
-    }
-
-};
-
 Blockly.Blocks["transform"] = {
     init: function() {
         this.appendDummyInput()
@@ -657,14 +551,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
     return options;
 };
 
-function renderBlock(id) {
-    var mainWorkspace = Blockly.getMainWorkspace();
-    var newBlock = mainWorkspace.newBlock(id);
-    newBlock.initSvg();
-    mainWorkspace.render();
-    return newBlock;
-}
-
 // Overrides currrent context menu
 Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
     if (this.options.readOnly || this.isFlyout) {
@@ -782,63 +668,63 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
             text: "Delimiter",
             // callback: CreateFieldExtractor
             callback: function() {
-                renderBlock('delimiter');
+                bbm.renderBlock('delimiter');
             }
         }, {
             enabled: true,
             text: "Field Extractor",
             // callback: CreateFieldExtractor
             callback: function() {
-                renderBlock('field_extractor');
+                bbm.renderBlock('field_extractor');
             }
         }, {
             enabled: true,
             text: "Binary Operator",
             // callback: CreateBinaryOperator
             callback: function() {
-                renderBlock('binary');
+                bbm.renderBlock('binary');
             }
         }, {
             enabled: true,
             text: "Unary Operator",
             // callback: CreateUnaryOperator
             callback: function() {
-                renderBlock('unary');
+                bbm.renderBlock('unary');
             }
         }, {
             enabled: true,
             text: "Lookup",
             // callback: CreateLookupOperator
             callback: function() {
-                renderBlock('lookup');
+                bbm.renderBlock('lookup');
             }
         }, {
             enabled: true,
             text: "Add Constants",
             // callback: CreateConstants
             callback: function() {
-                renderBlock('tp_constant');
+                bbm.renderBlock('tp_constant');
             }
         }, {
             enabled: true,
             text: "Logic Control-if",
             // callback: CreateLogic
             callback: function() {
-                renderBlock('controls_if');
+                bbm.renderBlock('controls_if');
             }
         }, {
             enabled: true,
             text: "Pipe",
             // callback: CreateLogic
             callback: function() {
-                renderBlock('lists_create_with');
+                bbm.renderBlock('lists_create_with');
             }
         }, {
             enabled: true,
             text: "Variable",
             // callback: CreateLogic
             callback: function() {
-                renderBlock('output_field');
+                bbm.renderBlock('output_field');
             }
         }];
         obj.forEach(function(item) {
