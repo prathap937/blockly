@@ -72,7 +72,8 @@ Blockly.Blocks["field_extractor"] = {
         this.setColour(20);
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
-        new blockObj(this);
+        blockObj(this);
+        window.q = this;
     },
     onchange: function(e) {
 
@@ -442,7 +443,7 @@ Blockly.Blocks['lookup'] = {
         this.setColour(345);
         this.setTooltip('');
         this.setHelpUrl('http://www.example.com/');
-        new blockObj(this);
+        blockObj(this);
     },
     onchange: function(e) {
         if (!this.workspace || e.blockId != this.id) {
@@ -497,7 +498,7 @@ Blockly.Blocks['tp_constant'] = {
         this.setColour(230);
         this.setTooltip('');
         this.setHelpUrl('http://www.example.com/');
-        new blockObj(this);
+        blockObj(this);
         // connects automatically to translate
         Blockly.Tp._connectMeToTransform(this);
     },
@@ -587,7 +588,7 @@ Blockly.Blocks["binary"] = {
         this.setColour("#006400");
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
-        new blockObj(this);
+        blockObj(this);
         Blockly.Tp._connectMeToTransform(this);
     },
 
@@ -679,7 +680,7 @@ Blockly.Blocks['tp_date_format'] = {
        this.setColour(230);
        this.setTooltip('');
        this.setHelpUrl('http://www.example.com/');
-       new blockObj(this);
+       blockObj(this);
        // connects automatically to translate
        // Blockly.Tp._connectMeToTransform(this);
    }
@@ -913,7 +914,6 @@ Blockly.Blocks["delimiter"] = {
         this.setColour(20);
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
-        new blockObj(this);
         this.appendNewField();
     },
     deleteEmptytInput: function() {

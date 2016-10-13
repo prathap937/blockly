@@ -40,10 +40,9 @@ Blockly.JavaScript['delimiter'] = function(block) {
   var childCol = [];
   var childVar = [];
   var childCode = [];
-  var getChildCode = undefined;
   block.inputList.forEach(function(input){
     if(input.connection && input.connection.targetConnection){
-      getChildCode = Blockly.JavaScript.valueToCode(block, input.name, Blockly.JavaScript.ORDER_ATOMIC);
+      var getChildCode = Blockly.JavaScript.valueToCode(block, input.name, Blockly.JavaScript.ORDER_ATOMIC);
       getChildCode = getChildCode.split('|$|');
       childVar.push('m'+getChildCode[0])
       childCol.push(getChildCode[1]);
@@ -153,37 +152,37 @@ Blockly.JavaScript['tp_constant'] = function(block) {
   return '';
 };
 
-Blockly.JavaScript['lists_create_with'] = function(block) {
-  var code='';
-  var parentVar;
-  if(block.getParent().type =='extractor'){
+// Blockly.JavaScript['lists_create_with'] = function(block) {
+//   var code='';
+//   var parentVar;
+//   if(block.getParent().type =='extractor'){
     
-    var newBlock = block.getParent();
-    // var value_line = Blockly.JavaScript.valueToCode(newBlock, 'line', Blockly.JavaScript.ORDER_ATOMIC);
-    // var value_file = Blockly.JavaScript.valueToCode(newBlock, 'file', Blockly.JavaScript.ORDER_ATOMIC);
-    // debugger;
-    parentVar ="line";  
-    // if(value_line!==''){
-    //   parentVar ="line";  
-    // }
-    // if(value_file!==''){
-    //   parentVar ="fileName";  
-    // }
+//     var newBlock = block.getParent();
+//     // var value_line = Blockly.JavaScript.valueToCode(newBlock, 'line', Blockly.JavaScript.ORDER_ATOMIC);
+//     // var value_file = Blockly.JavaScript.valueToCode(newBlock, 'file', Blockly.JavaScript.ORDER_ATOMIC);
+//     // debugger;
+//     parentVar ="line";  
+//     // if(value_line!==''){
+//     //   parentVar ="line";  
+//     // }
+//     // if(value_file!==''){
+//     //   parentVar ="fileName";  
+//     // }
 
-  }else if(block.getParent().type =='field_extractor'){
-    parentVar= 'm'+block.getParent().getFieldValue("VAR");
-  }else{
-    parentVar ="Store TODO";
-  }
-  for (var n = 0; n < block.itemCount_; n++) {
-    var str = Blockly.JavaScript.valueToCode(block, 'ADD'+n,0)|| undefined;
-    if(str){
-      str = str.replace("$$", parentVar);
-      code +=  str+"\n";
-    }
-  }
-  return [code, Blockly.JavaScript.ORDER_ATOMIC];
-};
+//   }else if(block.getParent().type =='field_extractor'){
+//     parentVar= 'm'+block.getParent().getFieldValue("VAR");
+//   }else{
+//     parentVar ="Store TODO";
+//   }
+//   for (var n = 0; n < block.itemCount_; n++) {
+//     var str = Blockly.JavaScript.valueToCode(block, 'ADD'+n,0)|| undefined;
+//     if(str){
+//       str = str.replace("$$", parentVar);
+//       code +=  str+"\n";
+//     }
+//   }
+//   return [code, Blockly.JavaScript.ORDER_ATOMIC];
+// };
 
 Blockly.JavaScript['lookup'] = function(block) {
   var get_var = block.getFieldValue('var');
