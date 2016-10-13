@@ -22,6 +22,8 @@
  <div id="blocklyDiv" ></div>
 
   <script>
+  var sample = '0003657095|1|2|09-19-16|20:00:45.0|||09-19-16|20:00:45.8|98956|919712569423|0|9141069913091232|17|pps|16|52|919712569423|98956|Asia/Calcutta|0.0000|2|0.0000|1|0.0000|2|9141069913091232||0|0|0|0||404050220707456|0|313|0.0000|0.0000|0.0000|0|0|0|0.00|0|124@@@@@@|12424@@@@|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|0|0.0000|||1|0|36||0|919825401010|404050220707456|101|1||||||||17|0|22|1*CORE BALANCE*10.4490*0.0000*1*+*2*0*2*V2V_LOCAL_BAL*0.0000*0.0000*2*+*2*0*3*SMS_BALANCE*0.0000*0.0000*4*+*2*0*4*V2V_NIGHT_MINUTES*0.0000*0.0000*2*+*2*0*5*STD_MINUTES*0.0000*0.0000*2*+*2*0*6*V2V_LOCAL_MINUTES*0.0000*0.0000*2*+*2*0*7*M2M_LOCAL*0.0000*0.0000*2*+*2*0*8*Minutes_LOCAL*0.0000*0.0000*2*+*2*0*9*SMS_STD_LO*0.0000*0.0000*4*+*2*0*10*LOCAL_NIGHT_MINUTES*0.0000*0.0000*2*+*2*0*11*LOCAL_STD_BAL*0.0000*0.0000*2*+*2*0*22*CORE2_BALANCE*0.0000*0.0000*1*+*2*0*42*V2O_BAL*0.0000*0.0000*2*+*2*0*62*DUMMY_SMS*0.0000*0.0000*4*+*2*0*63*V2V_LOC_NAT_SMS*0.0000*0.0000*4*+*2*0*65*ROAM_INTL_IC_FREE*0.0000*0.0000*2*+*2*0*66*ERW_LOCAL_MOBILE_SECS*0.0000*0.0000*2*+*2*0*67*CallDropV2VL*0.0000*0.0000*2*+*2*0*68*ERW_SMS*0.0000*0.0000*4*+*2*0*69*ERW_NIGHT_V2V_SECS*0.0000*0.0000*2*+*2*0*70*ERW_TALKTIME*0.0000*0.0000*1*+*2*0*73*FLEX_BAL*0.0000*0.0000*1*+*2*0*|1|5*ACCUM_SMS_100*0.0000*0.0000*|0||401D413F0BE4D1|1|0|3|0.0000||';
+
     var gen = document.getElementById('gen');
     var blocklyDiv = document.getElementById('blocklyDiv');
     var workspace = Blockly.inject(blocklyDiv
@@ -36,13 +38,23 @@
                 Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xmlDom);
 
     gen.addEventListener('click', function() {
+      var count = 0;
+      Blockly.JavaScript.initFunctions = ['setInputFileName("TestScript");'];
+      Blockly.JavaScript.initFunctions.push('this.mf.setMaxListSize(' + (count + 4) + ');\n');
       Blockly.JavaScript.variables = [];
       Blockly.JavaScript.extractPhase = '';
       Blockly.JavaScript.translatePhase = '';
       Blockly.JavaScript.storePhase = '';
-      Blockly.JavaScript.initFunctions = [];
       Blockly.JavaScript.workspaceToCode(Blockly.getMainWorkspace());
       var output ='';
+      Blockly.JavaScript.variables.forEach(function(variable) {
+        if (variable.indexOf('boolean ') != -1) {
+          count++;
+        } else if (variable.indexOf('Marker ') != -1) {
+          count++;
+        }
+      });
+      Blockly.JavaScript.initFunctions.push('this.mf.setMaxListSize(' + (count + 4) + ');\n');
       output+= "Variables\n";
       output+= "--------------------\n";
       output+= Blockly.JavaScript.variables.join('\n')+'\n';
@@ -65,6 +77,24 @@
       output+= "--------------------\n";
 
       console.log(output)
+      var http = new XMLHttpRequest();
+      var url = 'http://192.168.14.95:9000/compileNtest/';
+      http.onreadystatechange = function() {//Call a function when the state changes.  
+        if(http.readyState == 4 && http.status == 200) {
+          alert(http.responseText);
+        }
+      }
+      http.open('POST', url, true);
+      http.send(JSON.stringify({
+        name: 'TestScript',
+        init: Blockly.JavaScript.initFunctions.join('\n'),
+        absProcessor: Blockly.JavaScript.variables.join('\n'),
+        extract: Blockly.JavaScript.extractPhase,
+        transformation: Blockly.JavaScript.translatePhase,
+        store: Blockly.JavaScript.storePhase,
+        type: 'single',
+        sample: sample
+      }));
     });
   </script>
 </body>

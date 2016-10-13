@@ -11,12 +11,12 @@ Blockly.Tp._connectMeToTransform = function(block) {
 
 var blockObj = function(obj) {
     obj.renameVar = function(oldName, newName) {
-        if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
-            this.setFieldValue(newName, 'VAR');
+        if (Blockly.Names.equals(oldName, obj.getFieldValue('VAR'))) {
+            obj.setFieldValue(newName, 'VAR');
         }
     }
     obj.getVars = function() {
-        return [this.getFieldValue('VAR')];
+        return [obj.getFieldValue('VAR')];
     }
 
 };
@@ -53,17 +53,17 @@ Blockly.Blocks["extractor"] = {
 };
 
 Blockly.Blocks["field_extractor"] = {
+    currrentParent:null,
+    counter:0,
     init: function() {
         this.appendDummyInput()
-            .appendField("token delimited by")
-            .appendField(new Blockly.FieldTextInput(""), "delim")
-            .appendField("extract ")
+            .appendField("extract col # ")
             // .appendField(new Blockly.FieldNumber(''), "get")
             // .appendField(new Blockly.FieldVariable(''), "get")
             .appendField(new Blockly.FieldTextInput(''), "get")
-            .appendField("nd column of type")
+            .appendField("is of type")
             .appendField(new Blockly.FieldDropdown(JSON.parse(Blockly.Tp.dataType)), "operation")
-            .appendField(" & is named as")
+            .appendField(" & is named")
             .appendField(new Blockly.FieldVariable(""), "VAR");
         this.appendValueInput("next_marker")
             .setCheck(["field_extractor","Array"]);
@@ -72,7 +72,7 @@ Blockly.Blocks["field_extractor"] = {
         this.setColour(20);
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
-        blockObj(this);
+        new blockObj(this);
     },
     onchange: function(e) {
 
@@ -119,6 +119,41 @@ Blockly.Blocks["field_extractor"] = {
                 var _newDateBlock = renderBlock('tp_date_format');
                 _newDateBlock.setFieldValue(this.getFieldValue('VAR'), 'prefix');
             }
+        }else if (e.type == 'move') {
+            if(e.newParentId!==undefined){
+                var parentElement = workspace.getBlockById(e.newParentId);
+
+                if(parentElement.type === 'delimiter'){
+                    parentElement.appendNewField();
+                    this.currrentParent=e.newParentId;
+                    // if(parentElement.getDescendants().length == parentElement.getConnections_().length){
+
+                    // }
+                }
+            }else{
+                if(this.currrentParent){
+                    var parentElement = workspace.getBlockById(this.currrentParent);
+                    if (parentElement.deleteEmptytInput) {
+                        setTimeout(function(){
+                            parentElement.deleteEmptytInput();
+                        },100);
+                        this.currrentParent = null;
+                    }
+                 // if(parentElement.getDescendants().length+1 < parentElement.getConnections_().length){
+                 //     parentElement.getConnections_().some(function(item,index){
+                 //        if(!item.targetConnection){
+                 //           parentElement.removeInput("next_marker"+index);
+                 //           this.currrentParent = null;
+                 //        }
+                 //    })
+                     
+                 // }    
+                }
+                
+              //  debugger;    
+            }
+
+            
         }
 
         // Blockly.Tp.variableMap[this.getFieldValue("VAR")] = this.getFieldValue("operation");
@@ -407,7 +442,7 @@ Blockly.Blocks['lookup'] = {
         this.setColour(345);
         this.setTooltip('');
         this.setHelpUrl('http://www.example.com/');
-        blockObj(this);
+        new blockObj(this);
     },
     onchange: function(e) {
         if (!this.workspace || e.blockId != this.id) {
@@ -462,7 +497,7 @@ Blockly.Blocks['tp_constant'] = {
         this.setColour(230);
         this.setTooltip('');
         this.setHelpUrl('http://www.example.com/');
-        blockObj(this);
+        new blockObj(this);
         // connects automatically to translate
         Blockly.Tp._connectMeToTransform(this);
     },
@@ -552,7 +587,7 @@ Blockly.Blocks["binary"] = {
         this.setColour("#006400");
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
-        blockObj(this);
+        new blockObj(this);
         Blockly.Tp._connectMeToTransform(this);
     },
 
@@ -644,7 +679,7 @@ Blockly.Blocks['tp_date_format'] = {
        this.setColour(230);
        this.setTooltip('');
        this.setHelpUrl('http://www.example.com/');
-       blockObj(this);
+       new blockObj(this);
        // connects automatically to translate
        // Blockly.Tp._connectMeToTransform(this);
    }
@@ -842,10 +877,10 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
             }
         }, {
             enabled: true,
-            text: "Pipe",
+            text: "Delimiter",
             // callback: CreateLogic
             callback: function() {
-                renderBlock('lists_create_with');
+                renderBlock('delimiter');
             }
         }, {
             enabled: true,
@@ -865,5 +900,74 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
 
     Blockly.ContextMenu.show(e, menuOptions, this.RTL);
 };
+
+Blockly.Blocks["delimiter"] = {
+    counter: 0,
+    init: function() {
+
+        this.appendDummyInput("")
+            .appendField('Delimiter')
+            .appendField(new Blockly.FieldTextInput(""), "delim");
+        this.setInputsInline(false);
+        this.setOutput(true, ["field_extractor", "Array"]);
+        this.setColour(20);
+        this.setTooltip("");
+        this.setHelpUrl("http://www.example.com/");
+        new blockObj(this);
+        this.appendNewField();
+    },
+    deleteEmptytInput: function() {
+
+        var emptyConnections = [];
+        var inputList = this.inputList;
+        var removeItem = [];
+        for (var i = 0; i < (inputList.length-1); i++) {
+            if(inputList[i].connection && !inputList[i].connection.targetConnection){
+                this.removeInput(inputList[i].name);
+            }
+        }
+        
+    },
+    getEmptyConnectors: function() {
+        var connections = this.getConnections_();
+        var empty = false;
+        connections.some(function(c) {
+            // debugger;
+            if (c.type == 1 && !c.targetConnection) {
+                empty = c;
+                return true;
+            }
+        });
+        return empty;
+    },
+    appendNewField: function() {
+        var c = this.getEmptyConnectors();
+        if (!c) {
+            c = this.appendValueInput("next_marker" + this.counter).setCheck(["field_extractor"]);
+            this.counter += 1;
+            c = c.connection;
+        }
+    },
+    onchange: function(e) {
+        var self = this;
+        if (!this.workspace || e.blockId != this.id) {
+            return;
+        }
+        var _delim = this.getFieldValue('delim');
+        if (e.type == 'change') {
+            if (e.name == 'delim' && _delim != '' && e.oldValue == '') {
+                if (this.getInput('next_marker')) {
+                    return false;
+                }
+                this.appendNewField();
+            }
+        }
+        this.validate();
+    },
+
+    validate: function() {
+
+    }
+}
 
 Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH = 'Splitter';
