@@ -35,6 +35,8 @@ Blockly.JavaScript['delimiter'] = function(block) {
   chars.forEach(function(c) {
     ascii += c.charCodeAt(0);
   });
+  var escapeMatch = text_delim.match(/(\\t|\\b|\\n|\\r|\\f|\'|\"|\\)/g); 
+  if(escapeMatch){ text_delim = '\\'+text_delim} 
 
   var token = 'private byte[] ' + ascii + '= "'+text_delim+'".getBytes();\n';
   var childCol = [];
@@ -51,7 +53,7 @@ Blockly.JavaScript['delimiter'] = function(block) {
   })
     childCol = childCol.join(',');
     childVar = childVar.length > 0 ? ','+childVar.join(',') : ''; 
-    code = '$$.splitAndGetMarkers(data,'+ascii+',int[]{'+childCol+'},mf'+childVar+');\n';
+    code = '$$.splitAndGetMarkers(data,'+ascii+',new int[]{'+childCol+'},mf'+childVar+');\n';
     code+=childCode.join('');
 
   if (Blockly.JavaScript.variables.indexOf(token) == -1) {
@@ -80,7 +82,8 @@ Blockly.JavaScript['field_extractor'] = function(block) {
   // code = currBlockCode + childCode;
   code= variable_marker+'|$|'+number_get+'|$|'+childCode;
  
-  
+  Blockly.JavaScript.initFunctions.push('m'+variable_marker+' = mf.create(0, 0);\n');
+
   var marker = 'private Marker m' + variable_marker + ';\n';
   if (Blockly.JavaScript.variables.indexOf(marker) == -1) {
     Blockly.JavaScript.variables.push(marker);

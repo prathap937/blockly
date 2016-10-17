@@ -25,14 +25,14 @@ var blockObj = function(obj) {
 Blockly.Blocks["extractor"] = {
     init: function() {
         this.appendValueInput("line")
-            .setCheck(['field_extractor', 'Array'])
+            .setCheck(['delimiter', 'Array'])
             .appendField("Extract from line");
         this.appendValueInput("file")
-            .setCheck(["field_extractor","Array"])
+            .setCheck(["delimiter","Array"])
             .appendField("Extract from file name");
         this.setInputsInline(false);
         this.setNextStatement("transform");
-        this.setColour(20);
+        this.setColour(51);
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
         Blockly.Tp.extractor_ = this;
@@ -66,14 +66,13 @@ Blockly.Blocks["field_extractor"] = {
             .appendField(" & is named")
             .appendField(new Blockly.FieldVariable(""), "VAR");
         this.appendValueInput("next_marker")
-            .setCheck(["field_extractor","Array"]);
+            .setCheck(["delimiter","Array"]);
         this.setInputsInline(false);
         this.setOutput(true, "field_extractor");
-        this.setColour(20);
+        this.setColour(28);
         this.setTooltip("");
         this.setHelpUrl("http://www.example.com/");
         blockObj(this);
-        window.q = this;
     },
     onchange: function(e) {
 
@@ -140,18 +139,8 @@ Blockly.Blocks["field_extractor"] = {
                         },100);
                         this.currrentParent = null;
                     }
-                 // if(parentElement.getDescendants().length+1 < parentElement.getConnections_().length){
-                 //     parentElement.getConnections_().some(function(item,index){
-                 //        if(!item.targetConnection){
-                 //           parentElement.removeInput("next_marker"+index);
-                 //           this.currrentParent = null;
-                 //        }
-                 //    })
-                     
-                 // }    
                 }
                 
-              //  debugger;    
             }
 
             
@@ -431,7 +420,7 @@ Blockly.Blocks['lookup'] = {
             .appendField(new Blockly.FieldTextInput("default"), "path");
         this.appendDummyInput()
             .appendField("Pick key")
-            .appendField(new Blockly.FieldVariable("item"), "var_key")
+            .appendField(new Blockly.FieldVariable(""), "var_key")
             .appendField("   value called as")
             .appendField(new Blockly.FieldVariable(""), "VAR")
             .appendField(" and is of type")
@@ -451,6 +440,12 @@ Blockly.Blocks['lookup'] = {
         }
         if(e.type=='create'){
             var drop = this.getField("VAR");
+            var var_key = this.getField("var_key");
+            var_key.setValue("")
+            var_key.setText("");
+            // var getVars = Blockly.Variables.allVariables(Blockly.mainWorkspace);
+                // debugger;
+            // var_key.menuGenerator_ = getVars;
             var options = [];
             drop.setText(" "); // set the actual text
             drop.setValue(" "); // set the actual value

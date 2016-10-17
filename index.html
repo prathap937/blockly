@@ -32,7 +32,7 @@
     window.addEventListener('resize', onresize, true);
     Blockly.svgResize(workspace); 
 
-    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="195" y="107"><value name="line"><block type="field_extractor" id="-UBE=0AF-5wVL6~}%=aX"><field name="delim"></field><field name="get"></field><field name="operation">string</field><field name="VAR">i</field></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><field name="operation">hdfs</field><field name="path"></field><field name="headers">TRUE</field><value name="list_to_store"></value></block></next></block></next></block></xml>';
+    var xmlInit = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="extractor" id="D-i{Q5j{]PJ!5f.@f^S^" deletable="false" x="195" y="107"><value name="line"><block type="delimiter" id="9L;Pa`76rAi-hSemN%n^"><field name="delim"></field><value name="next_marker0"><block type="field_extractor" id="D%/L_K{PIa@}EFAoi5m;"><field name="get"></field><field name="operation">string</field><field name="VAR">i</field></block></value></block></value><next><block type="transform" id="`#{siG=4Z=W{9fzG7~Xj" deletable="false"><next><block type="store" id="x6tnR`YVMw61kvdnf}`B" deletable="false"><mutation items="4"></mutation><field name="operation">hdfs</field><field name="headers">TRUE</field><value name="ADD3"><block type="output_field" id="5OJPXS?uH|Mf(R3-mx52"><field name="NAME">i</field></block></value></block></next></block></next></block></xml>';
 
                  var xmlDom = Blockly.Xml.textToDom(xmlInit);
                 Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, xmlDom);
@@ -85,6 +85,10 @@
         }
       }
       http.open('POST', url, true);
+      // http.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+      // http.setRequestHeader('Accept', 'application/json');
+      // http.overrideMimeType("text/js; charset=ISO-8859-1")
+      http.setRequestHeader('Content-Type', 'application/json');
       http.send(JSON.stringify({
         name: 'TestScript',
         init: Blockly.JavaScript.initFunctions.join('\n'),
