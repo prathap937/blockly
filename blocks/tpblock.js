@@ -87,7 +87,7 @@ Blockly.Blocks["field_extractor"] = {
                 var mainWorkspace = Blockly.getMainWorkspace();
                 if (variable.charAt(0) == '_') {
                     // Appends new block to main workspace
-                    var newBlock = mainWorkspace.newBlock('binary');
+                    var newBlock = mainWorkspace.newBlock('dynamic');
                     newBlock.initSvg();
                     newBlock.render();
                     var inputLists = Blockly.Tp.transform_.inputList;
@@ -346,6 +346,7 @@ Blockly.Blocks["unary"] = {
             .appendField(new Blockly.FieldDropdown([
                 []
             ]), "operation")
+            .appendField(dummyInput, "m2")
             .appendField(" & is named as")
             .appendField(new Blockly.FieldVariable(""), "VAR");
         this.setInputsInline(false);
@@ -386,6 +387,150 @@ Blockly.Blocks["unary"] = {
             drop.setText(" "); // set the actual text
             drop.setValue(" "); // set the actual value
             drop.menuGenerator_ = options;
+        }
+        this.validate();
+    },
+    validate: function() {
+        var m1 = this.getFieldValue('m1');
+        var operation = this.getFieldValue('operation');
+        var result = this.getFieldValue('VAR');
+        if (m1 == '' || operation == '' || result == '' || operation == ' ') {
+            this.setWarningText('Fill all fields');
+            return false;
+        }
+        this.setWarningText(null);
+        return true;
+    }
+
+};
+Blockly.Blocks["dynamic"] = {
+    OPERATIONS: {
+        tpDate: {
+            data: [
+                ["after", "$1 = tpDate.after(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3);||boolean||binary"],
+                ["before", "$1 = tpDate.before(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3);||boolean||binary"],
+                ["differenceInMillis", "$1 = tpDate.differenceInMillis(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3);||Marker||binary"],
+                ["convertDate", "$1 = tpDate.convertDate(m$2.getData() == null ? data: m$2.getData(), m$2, MarkerFactory, m$3);||Marker||unary"]
+            ]            
+        },
+        tpString: {
+            data: [
+                ["contains", "$1 = tpString.contains(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["containsIgnoreCase", "$1 = tpString.containsIgnoreCase(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["endsWith", "$1 = tpString.endsWith(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["endsWithIgnore", "$1 = tpString.endsWithIgnore(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["extractLeading", "$1 = tpString.extractLeading(m$2.getData() == null ? data: m$2.getData(), $1, integer, mf);||Marker||binary"],
+                ["extractTrailing", "$1 = tpString.extractTrailing(m$2.getData() == null ? data: m$2.getData(), $1, integer, mf);||Marker||binary"],
+                ["indexOf", "$1 = tpString.indexOf(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["indexOIgnoreCase", "$1 = tpString.indexOIgnoreCase(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["merge", "$1 = tpString.merge(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["startsWith", "$1 = tpString.startsWith(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3);||boolean||binary"],
+                ["toLowerCase", "$1 = tpString.toLowerCase(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["toTitleCase", "$1 = tpString.toTitleCase(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["toUpperCase", "$1 = tpString.toUpperCase(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["isNull", "$1 = tpString.isNull(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||boolean||unary"],
+                ["length", "$1 = tpString.length(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["rTrim", "$1 = tpString.rTrim(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["lTrim", "$1 = tpString.lTrim(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["trim", "$1 = tpString.trim(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"]
+                
+            ]            
+        },
+        tpMath: {
+            data: [
+                ["addDouble", "$1 = tpMath.addDouble(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["addLong", "$1 = tpMath.addLong(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["eq", "$1 = tpMath.eq(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["greaterEqThan", "$1 = tpMath.greaterEqThan(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["greaterThan", "$1 = tpMath.greaterThan(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["lessEqThan", "$1 = tpMath.lessEqThan(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["lessThan", "$1 = tpMath.lessThan(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||boolean||binary"],
+                ["max", "$1 = tpMath.max(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["min", "$1 = tpMath.min(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["subDouble", "$1 = tpMath.subDouble(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["subLong", "$1 = tpMath.subLong(m$2.getData() == null ? data: m$2.getData(), m$2, m$3.getData() == null ? data: m$3.getData(), m$3, mf);||Marker||binary"],
+                ["abs", "$1 =tpMath.abs(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["ceil", "$1 =tpMath.ceil(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["round", "$1 =tpMath.round(m$2.getData() == null ? data: m$2.getData(), integer, m$2, mf);||Marker||unary"],
+                ["floor", "$1 =tpMath.floor(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["isNumber", "$1 =tpMath.isNumber(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||boolean||unary"],
+                ["extractDecimalFractionPart", "$1 =tpMath.extractDecimalFractionPart(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["extractDecimalIntegerPart", "$1 =tpMath.extractDecimalIntegerPart(m$2.getData() == null ? data: m$2.getData(), m$2, mf);||Marker||unary"],
+                ["toMarker", "$1 =tpMath.toMarker(m$2 , mf);||Marker||unary"],
+                ["toMarker", "$1 =tpMath.toMarker(m$2, mf);||Marker||unary"]
+            ]            
+        },
+        tpLogic: {
+            data: [
+                ["and", "$1 = tpLogic.and(m$2, m$3);||Marker||binary"],
+                ["or", "$1 = tpLogic.or(m$2, m$3);||Marker||binary"],
+                ["not", "$1 = tpLogic.not(m$2)||boolean||unary"]
+            ]            
+        }
+    },
+    init: function() {
+        var dummyInput = new Blockly.FieldVariable("");
+            dummyInput.setVisible(false);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldVariable(""), "m1")
+            .appendField(new Blockly.FieldDropdown([
+                []
+            ]), "operation")
+            .appendField(dummyInput, "m2")
+            .appendField(" & is named as")
+            .appendField(new Blockly.FieldVariable(""), "VAR");
+        this.setInputsInline(false);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#006400");
+        this.setTooltip("");
+        this.setHelpUrl("http://www.example.com/");
+        Blockly.Tp._connectMeToTransform(this);
+    },
+    getDropDown: function() {
+        var superSet = JSON.parse(Blockly.Tp.dataType);
+        var m1 = this.getFieldValue("m1");
+        var dataType = Blockly.Tp.variableDateTypeMap[m1];
+        switch (dataType) {
+            case 'string':
+                return this.OPERATIONS.tpString.data;
+                break;
+            case 'number':
+                return this.OPERATIONS.tpMath.data;
+                break;
+            case 'date':
+                return this.OPERATIONS.tpDate.data;
+                break;
+            default:
+                return this.OPERATIONS.tpLogic.data;
+        }
+    },
+    updateField: function(type){
+        if(type =='binary'){
+            this.getField('m2').setVisible(true)
+        }else{
+            this.getField('m2').setVisible(false)
+        }
+        this.render();
+    },
+    onchange: function(changeEvent) {
+        if (changeEvent.blockId != this.id) {
+            return;
+        }
+        if (changeEvent.type === "change" && changeEvent.name == 'm1') {
+            var m1 = this.getFieldValue("m1");
+            var options = this.getDropDown(m1); // The new options you want to have
+            var drop = this.getField("operation");
+            drop.setText(" "); // set the actual text
+            drop.setValue(" "); // set the actual value
+            drop.menuGenerator_ = options;
+        }
+        if (changeEvent.type === "change" && changeEvent.name == 'operation') {
+            var drop = this.getField("operation");
+            var dropType = drop.value_.split('||')[2];
+            if(dropType){
+                this.updateField(dropType);
+            }
         }
         this.validate();
     },
@@ -849,6 +994,14 @@ Blockly.WorkspaceSvg.prototype.showContextMenu_ = function(e) {
             // callback: CreateUnaryOperator
             callback: function() {
                 renderBlock('unary');
+            }
+        },
+        {
+            enabled: true,
+            text: "Dynamic Operator",
+            // callback: CreateUnaryOperator
+            callback: function() {
+                renderBlock('dynamic');
             }
         }, {
             enabled: true,
